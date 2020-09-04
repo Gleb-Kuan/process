@@ -4,7 +4,7 @@ namespace Process\Test;
 
 use Psr\Container\ContainerInterface;
 
-class TestContainer implements ContainerInterface
+class TestedContainer implements ContainerInterface
 {
     /**
      * @var array

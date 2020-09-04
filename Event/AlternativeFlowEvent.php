@@ -2,8 +2,11 @@
 
 namespace Process\Event;
 
-use Process\ExecutionContext;
+use Process\Context\ExecutionContext;
 
+/**
+ * Class AlternativeFlowEvent
+ */
 class AlternativeFlowEvent extends ProcessEvent
 {
     /**
@@ -18,6 +21,7 @@ class AlternativeFlowEvent extends ProcessEvent
 
     /**
      * AlternativeFlowEvent constructor.
+     *
      * @param ExecutionContext $executionContext
      * @param string $schemaItemFromName
      * @param string $schemaItemToName

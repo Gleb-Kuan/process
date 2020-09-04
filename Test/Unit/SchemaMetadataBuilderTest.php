@@ -1,21 +1,23 @@
 <?php
 
-namespace Process\Test;
+namespace Process\Test\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Process\Exception\LogicalException;
 use Process\Exception\ProcessBuildException;
 use Process\ProcessMetadataBuilder;
+use Process\SchemaMetadataBuilder;
 
 /**
  * Class ProcessMetadataBuilderTest
  */
-class ProcessMetadataBuilderTest extends ProcessBaseTest
+class SchemaMetadataBuilderTest extends TestCase
 {
     /**
      * @param ProcessMetadataBuilder $processMetadataBuilder
-     * @dataProvider prepareProcessMetadataBuilder
+     * @dataProvider prepareSchemaMetadataBuilder
      */
-    public function testAddFlowWhenLogicException(ProcessMetadataBuilder $processMetadataBuilder)
+    public function testAddFlowWhenLogicException(SchemaMetadataBuilder $processMetadataBuilder)
     {
         $this->expectException(LogicalException::class);
         $processMetadataBuilder->addFlow('item1', 'item1');
@@ -23,9 +25,9 @@ class ProcessMetadataBuilderTest extends ProcessBaseTest
 
     /**
      * @param ProcessMetadataBuilder $processMetadataBuilder
-     * @dataProvider prepareProcessMetadataBuilder
+     * @dataProvider prepareSchemaMetadataBuilder
      */
-    public function testAddFlowWhenActivityFromMissing(ProcessMetadataBuilder $processMetadataBuilder)
+    public function testAddFlowWhenActivityFromMissing(SchemaMetadataBuilder $processMetadataBuilder)
     {
         $this->expectException(ProcessBuildException::class);
         $this->expectExceptionCode(ProcessBuildException::ACTIVITY_MISSING_CODE);
@@ -34,9 +36,9 @@ class ProcessMetadataBuilderTest extends ProcessBaseTest
 
     /**
      * @param ProcessMetadataBuilder $processMetadataBuilder
-     * @dataProvider prepareProcessMetadataBuilder
+     * @dataProvider prepareSchemaMetadataBuilder
      */
-    public function testAddFlowWhenActivityToMissing(ProcessMetadataBuilder $processMetadataBuilder)
+    public function testAddFlowWhenActivityToMissing(SchemaMetadataBuilder $processMetadataBuilder)
     {
         $this->expectException(ProcessBuildException::class);
         $this->expectExceptionCode(ProcessBuildException::ACTIVITY_MISSING_CODE);
@@ -47,9 +49,9 @@ class ProcessMetadataBuilderTest extends ProcessBaseTest
      * Testing exception while set initial activity
      *
      * @param ProcessMetadataBuilder $processMetadataBuilder
-     * @dataProvider prepareProcessMetadataBuilder
+     * @dataProvider prepareSchemaMetadataBuilder
      */
-    public function testSetInitialActivity(ProcessMetadataBuilder $processMetadataBuilder)
+    public function testSetInitialActivity(SchemaMetadataBuilder $processMetadataBuilder)
     {
         $this->expectException(ProcessBuildException::class);
         $this->expectExceptionCode(ProcessBuildException::ACTIVITY_MISSING_CODE);
@@ -60,9 +62,9 @@ class ProcessMetadataBuilderTest extends ProcessBaseTest
      * Testing exception while create process metadata
      *
      * @param ProcessMetadataBuilder $processMetadataBuilder
-     * @dataProvider prepareProcessMetadataBuilder
+     * @dataProvider prepareSchemaMetadataBuilder
      */
-    public function testGetProcessMetadata(ProcessMetadataBuilder $processMetadataBuilder)
+    public function testGetProcessMetadata(SchemaMetadataBuilder $processMetadataBuilder)
     {
         $this->expectException(ProcessBuildException::class);
         $this->expectExceptionCode(ProcessBuildException::INITIAL_ACTIVITY_MISSING_CODE);
@@ -72,13 +74,13 @@ class ProcessMetadataBuilderTest extends ProcessBaseTest
     /**
      * @return array
      */
-    public function prepareProcessMetadataBuilder() : array
+    public function prepareSchemaMetadataBuilder() : array
     {
-        $processMetadataBuilder = new ProcessMetadataBuilder();
+        $processMetadataBuilder = new SchemaMetadataBuilder();
         $processMetadataBuilder->setProcessName('Test');
-        $processMetadataBuilder->addSchemaItem('item1', 'item1Handler');
-        $processMetadataBuilder->addSchemaItem('item2', 'item2Handler');
-        $processMetadataBuilder->addSchemaItem('item3', 'item3Handler');
+        $processMetadataBuilder->addSchemaItem('item1', 'item1Handler', []);
+        $processMetadataBuilder->addSchemaItem('item2', 'item2Handler', []);
+        $processMetadataBuilder->addSchemaItem('item3', 'item3Handler', []);
         return [
             [
                 $processMetadataBuilder

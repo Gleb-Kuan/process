@@ -7,7 +7,7 @@ use Process\Exception\ProcessBuildException;
 use Process\Metadata\ProcessMetadata;
 use Process\Util\ConfigurationProcessor;
 
-class ProcessMetadataBuilder
+class SchemaMetadataBuilder
 {
     /**
      * @var string
@@ -40,10 +40,11 @@ class ProcessMetadataBuilder
     /**
      * @param string $name
      * @param string $activityId
+     * @param $meta
      */
-    public function addSchemaItem(string $name, string $activityId) : void
+    public function addSchemaItem(string $name, string $activityId, $meta) : void
     {
-        $this->activities[$name] = ['activityId' => $activityId];
+        $this->activities[$name] = ['activityId' => $activityId, 'meta' => $meta];
     }
 
     /**
@@ -106,7 +107,7 @@ class ProcessMetadataBuilder
 
         $this->setProcessName($processedConf['name']);
         foreach ($processedConf['activities'] as $activity) {
-            $this->addSchemaItem($activity['name'], $activity['activityId']);
+            $this->addSchemaItem($activity['name'], $activity['activityId'], $activity['meta']);
             if($activity['isInitial']) {
                 $this->setInitialActivity($activity['name']);
             }

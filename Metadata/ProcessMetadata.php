@@ -2,6 +2,9 @@
 
 namespace Process\Metadata;
 
+use Process\Exception\ProcessMetadataException;
+use Process\Test\Unit\ProcessMetadataTest;
+
 final class ProcessMetadata
 {
     /**
@@ -41,6 +44,8 @@ final class ProcessMetadata
 
     /**
      * @return string
+     *
+     * @see ProcessMetadataTest::testAllMethods()
      */
     public function getProcessName() : string
     {
@@ -49,6 +54,8 @@ final class ProcessMetadata
 
     /**
      * @return string
+     *
+     * @see ProcessMetadataTest::testAllMethods()
      */
     public function getInitialActivity() : string
     {
@@ -57,6 +64,8 @@ final class ProcessMetadata
 
     /**
      * @return iterable
+     *
+     * @see ProcessMetadataTest::testAllMethods()
      */
     public function getActivities() : iterable
     {
@@ -65,9 +74,26 @@ final class ProcessMetadata
 
     /**
      * @return iterable
+     *
+     * @see ProcessMetadataTest::testAllMethods()
      */
     public function getFlows() : iterable
     {
         return $this->flows;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     *
+     * @see ProcessMetadataTest::testAllMethods()
+     */
+    public function getActivityData(string $name)
+    {
+        $activities = $this->getActivities();
+        if(!isset($activities[$name])) {
+            ProcessMetadataException::missingDataForActivity($name);
+        }
+        return $activities[$name];
     }
 }

@@ -4,7 +4,7 @@ namespace Process\Util;
 
 use Process\Dumper\DumperInterface;
 use Process\Dumper\GraphvizDumper;
-use Process\ProcessMetadataBuilder;
+use Process\SchemaMetadataBuilder;
 
 /**
  * Class Dumper
@@ -29,7 +29,7 @@ class Dumper
     public static function dump(array $configuration, string $dumper = self::GRAPHVIZ_DUMPER) : string
     {
         $processName = $configuration['name'];
-        $processMetadataBuilder = new ProcessMetadataBuilder($processName);
+        $processMetadataBuilder = new SchemaMetadataBuilder($processName);
         $processMetadata = $processMetadataBuilder->buildFromArray($configuration);
         if(!isset(self::$dumpersMap[$dumper])) {
             throw new \Exception(spintf("Unsupported dumper %s", $dumper));

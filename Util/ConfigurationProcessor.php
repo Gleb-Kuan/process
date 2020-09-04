@@ -2,74 +2,75 @@
 
 namespace Process\Util;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Process\Exception\ConfigurationException;
 
+/**
+ * Class ConfigurationProcessor
+ */
 class ConfigurationProcessor
 {
-    /**
-     * @var OptionsResolver
-     */
-    private $optionsResolver;
-
-    /**
-     * ProcessConfigurationValidator constructor.
-     */
-    public function __construct()
-    {
-        $this->optionsResolver = new OptionsResolver();
-    }
-
     /**
      * @param array $configuration
      * @return array
      */
     public function process(array $configuration) : array
     {
-        $processedConf = $this->processRootConfiguraion($configuration);
-        foreach ($configuration['activities'] as $index => $activityConf) {
-            $processedConf['activities'][$index] = $this->processActivityConfiguration($activityConf);
+        $this->processRootConfiguraion($configuration);
+        foreach ($configuration['activities'] as $index => &$activityConf) {
+            $this->processActivityConfiguration($activityConf);
         }
-        foreach ($configuration['flows'] as $index => $flowConf) {
-            $processedConf['flows'][$index] = $this->processFlowConfiguration($flowConf);
+        foreach ($configuration['flows'] as $index => &$flowConf) {
+            $this->processFlowConfiguration($flowConf);
         }
-        return $processedConf;
+
+        return $configuration;
     }
 
     /**
      * @param array $configuration
-     * @return array
      */
-    private function processRootConfiguraion(array $configuration) : array
+    private function processRootConfiguraion(array $configuration)
     {
-        return $this->optionsResolver
-            ->clear()
-            ->setRequired(['name', 'activities', 'flows'])
-            ->resolve($configuration);
+        if(!isset($configuration['name'])) {
+            ConfigurationException::missingRequiredField('name');
+        }
+        if(!isset($configuration['activities'])) {
+            ConfigurationException::missingRequiredField('activities');
+        }
+        if(!isset($configuration['flows'])) {
+            ConfigurationException::missingRequiredField('flows');
+        }
     }
 
     /**
      * @param array $activityConfiguration
-     * @return array
      */
-    private function processActivityConfiguration(array $activityConfiguration) : array
+    private function processActivityConfiguration(array &$activityConfiguration)
     {
-        return $this->optionsResolver
-            ->clear()
-            ->setRequired(['name', 'activityId'])
-            ->setDefault('isInitial', false)
-            ->resolve($activityConfiguration);
+        if(!isset($activityConfiguration['name'])) {
+            ConfigurationException::activityMustHaveName($activityConfiguration);
+        }
+        if(!isset($activityConfiguration['isInitial'])) {
+            $activityConfiguration['isInitial'] = false;
+        }
+        if(!isset($activityConfiguration['meta'])) {
+            $activityConfiguration['meta'] = [];
+        }
     }
 
     /**
      * @param array $flowConfiguration
-     * @return array
      */
-    private function processFlowConfiguration(array $flowConfiguration) : array
+    private function processFlowConfiguration(array &$flowConfiguration)
     {
-        return $this->optionsResolver
-            ->clear()
-            ->setRequired(['activityFromName', 'activityToName'])
-            ->setDefault('isAlternative', false)
-            ->resolve($flowConfiguration);
+        if(!isset($flowConfiguration['activityFromName'])) {
+            ConfigurationException::missingActivityFromName($flowConfiguration);
+        }
+        if(!isset($flowConfiguration['activityToName'])) {
+            ConfigurationException::missingActivityToName($flowConfiguration);
+        }
+        if(!isset($flowConfiguration['isAlternative'])) {
+            $flowConfiguration['isAlternative'] = false;
+        }
     }
 }

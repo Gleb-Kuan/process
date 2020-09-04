@@ -2,7 +2,7 @@
 
 namespace Process\Event;
 
-use Process\ExecutionContext;
+use Process\Context\ExecutionContext;
 
 class SchemaItemEvent extends ProcessEvent
 {
@@ -21,6 +21,7 @@ class SchemaItemEvent extends ProcessEvent
 
     /**
      * SchemaItemEvent constructor.
+     *
      * @param ExecutionContext $executionContext
      * @param string $schemaItemName
      * @param string $eventType

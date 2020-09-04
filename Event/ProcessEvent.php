@@ -2,18 +2,22 @@
 
 namespace Process\Event;
 
-use Process\ExecutionContext;
+use Process\Context\ExecutionContext;
 
+/**
+ * Class ProcessEvent
+ */
 class ProcessEvent
 {
     /**
-     * @var ExecutionContext
+     * @var ExecutionContextInterface
      */
     protected $executionContext;
 
     /**
      * ProcessEvent constructor.
-     * @param ExecutionContext $executionContext
+     *
+     * @param ExecutionContextInterface $executionContext
      */
     public function __construct(ExecutionContext $executionContext)
     {
